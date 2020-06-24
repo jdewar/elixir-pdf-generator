@@ -69,6 +69,13 @@ In development: While this usually works, it unfortunately leads to
 pdf_generator to be compiled all the time again and again due to my bad Makefile
 skills. Help is very much appreciated.
 
+Eventually, if you are using Phoenix and you would like to have your npm packages installed localy, within the `/assets/node_modules` directory, simply run `npm install chrome-headless-render-pdf puppeteer` within `assets/node_modules` and pass `prefer_local_executable: true`
+ option when generating the PDF like this:
+
+ ```Elixir
+ PdfGenerator.generate({:url, "http://some-url.com"}, generator: :chrome, prefer_local_executable: true)
+ ```
+
 # Try it out
 
 Pass some HTML to PdfGenerator.generate:
@@ -121,11 +128,11 @@ html_works_too = "<html><body><h1>I need Docker, baby docker is what I need!"
 {:ok, filename} = PdfGenerator.generate html_works_too, generator: :chrome, no_sandbox: true, page_size: "letter"
 ```
 
-# System prerequisites 
+# System prerequisites
 
-It's either 
+It's either
 
-* wkhtmltopdf or 
+* wkhtmltopdf or
 
 * nodejs (for Chrome-headless/Puppeteer)
 
@@ -139,18 +146,18 @@ those generated with wkhtmltopdf.
 
 ### global install (great for Docker images)
 
-Run `npm -g install chrome-headless-render-pdf puppeteer`. 
+Run `npm -g install chrome-headless-render-pdf puppeteer`.
 
 This requires [nodejs](https://nodejs.org), of course. This will install a
 recent chromium and chromedriver to run Chrome in headless mode and use this
 browser and its API to print PDFs globally on your machine.
-   
+
 If you prefer a project-local install, use the `compile: "make chrome"` option
 in your mixfile's dependency-line.
 
 On some machines, this doesn't install Chromium and fails. Here's how to get
 this running on Ubuntu 18:
-   
+
 ```bash
 DEBIAN_FRONTEND=noninteractive PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=TRUE \
   apt-get install -y chromium-chromedriver \
@@ -163,7 +170,7 @@ Run `make priv/node_modules`. This requires both `nodejs` (insallation see
 above) and `make`. 
 
 Or, run `cd priv && npm install`
-   
+
 ## wkhtmltopdf
 
 - **Alpine** (tested on 3.11): `apk add wkhtmltodf` - gone are the days of
@@ -173,18 +180,18 @@ Or, run `cd priv && npm install`
 
 - **Ubuntu 18.04**: Download wkhtmltopdf and place it in your $PATH. Current
   binaries can be found here: http://wkhtmltopdf.org/downloads.html
-  
+
   For the impatient (Ubuntu 18.04 Bionic Beaver):
-   
+
   ```
   apt-get -y install xfonts-base xfonts-75dpi \
     && wget https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox_0.12.5-1.bionic_amd64.deb \
     && dpkg -i wkhtmltox_0.12.5-1.bionic_amd64.deb
   ```
-   
+
   For other distributions, refer to http://wkhtmltopdf.org/downloads.html – For
   example, replace `bionic` with `xenial` if you're on Ubuntu 16.04.
-   
+
 ## optional dependencies
 
 3. _optional:_ Install `xvfb` (shouldn't be required with the binary mentioned above):
@@ -192,7 +199,7 @@ Or, run `cd priv && npm install`
    To use other wkhtmltopdf executables comiled with an unpatched Qt on systems
    without an X window server installed, please install `xvfb-run` from your
    repository (on Debian/Ubuntu: `sudo apt-get install xvfb`).
-   
+
    I am glad to have received feedback that people are actually using this
    feature.
 
@@ -233,7 +240,7 @@ config :pdf_generator,
 
 - `edit_password`:    requires `pdftk`, set password for edit permissions on PDF
 
-- `shell_params`:     pass custom parameters to `wkhtmltopdf`. **CAUTION: BEWARE OF SHELL INJECTIONS!**
+- `shell_params`:     pass custom parameters to `wkhtmltopdf` or `chrome-headless-render-pdf`. **CAUTION: BEWARE OF SHELL INJECTIONS!**. **CAUTION: BEWARE OF SHELL INJECTIONS!**
 
 - `command_prefix`:   prefix `wkhtmltopdf` with some command or a command with options
                       (e.g. `xvfb-run -a`, `sudo` ..)
@@ -242,7 +249,7 @@ config :pdf_generator,
 
 ## Contribution; how to run tests
 
-You're more than welcome ot submit patches. Please run `mix test` to ensure at bit of stability. Tests require a full-fledged environment, with all of `wkhtmltopdf`, `xvfb` and `chrome-headless-render-pdf` available path. Also make to to have run `npm install` in the app's base directory (will install chrome-headless-render-pdf non-globally in there). With all these installed, `mix test` should run smoothly.
+You're more than welcome to submit patches. Please run `mix test` to ensure at bit of stability. Tests require a full-fledged environment, with all of `wkhtmltopdf`, `xvfb` and `chrome-headless-render-pdf` available path. Also make to to have run `npm install` in the app's base directory (will install chrome-headless-render-pdf non-globally in there). With all these installed, `mix test` should run smoothly.
 
 _Hint_: Getting `:enoent` errors ususally means that chrome or xvfb couldn't be run. Yes, this should output a nicer error.
 
@@ -306,6 +313,6 @@ file a report.
 
 # Contributing
 
-Contributions (Issues, PRs…) are more than welcome. Please ave a quick read at 
+Contributions (Issues, PRs…) are more than welcome. Please have a quick read at 
 the [Contribution tips](./CONTRIBUTING.md), though. It's basically about scope 
 and kindness.
