@@ -186,7 +186,7 @@ defmodule PdfGenerator do
 
   @spec make_command(generator, opts, content, {html_path, pdf_path}) :: {path, list()}
   def make_command(:chrome, options, content, {html_path, pdf_path}) do
-    chrome_executable = PdfGenerator.PathAgent.get().chrome_path |> IO.inspect(label: "chrome")
+    chrome_executable = PdfGenerator.PathAgent.get().chrome_path
     node_executable = PdfGenerator.PathAgent.get().node_path
 
     disable_sandbox =
@@ -236,7 +236,7 @@ defmodule PdfGenerator do
         if(disable_sandbox, do: ["--chrome-option=--no-sandbox"], else: [])
       ])
 
-    {executable, arguments} |> inspect() |> Logger.error()
+    {executable, arguments} |> inspect() |> Logger.info()
     {executable, arguments}
   end
 
